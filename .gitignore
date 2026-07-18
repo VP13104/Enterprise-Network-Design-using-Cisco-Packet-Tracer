@@ -1,0 +1,8 @@
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Temporary files
+*.tmp
