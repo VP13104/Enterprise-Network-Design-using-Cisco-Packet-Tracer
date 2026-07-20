@@ -30,10 +30,13 @@ will include NAT/PAT, DNS, Web, Email, FTP, ACLs, SSH, OSPF, and additional ente
 ## Network Topology
 
 ![Topology](Images/root.png)
+
 **ISP** ⬇️
 ![ISP](Images/ISP.png)
+
 **Office** ⬇️
 ![Office](Images/Office.png)
+
 **Home** ⬇️
 ![Home](Images/Home.png)
 
