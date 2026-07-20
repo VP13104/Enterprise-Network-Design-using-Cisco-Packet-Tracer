@@ -1,0 +1,175 @@
+# Network Architecture
+
+## Overview
+
+The Enterprise Network Design project is built around a modular architecture consisting of three independent logical networks:
+
+- Corporate Office Network
+- Home Network
+- Internet Service Provider (ISP) Network
+
+Each network serves a distinct purpose and is designed to simulate a real-world enterprise deployment while remaining scalable for future enhancements.
+
+
+## Architecture Diagram
+
+![Network Topology](../Images/root.png)
+
+
+# Network Segments
+
+The overall network is divided into three primary segments.
+
+```mermaid
+graph TD 
+    ISP[ISP Network]
+
+    ISP --> co[corporate Network]
+    ISP --> Home[Home Network]
+```
+
+This design separates customer networks while allowing them to connect to the ISP infrastructure independently.
+
+
+
+# Corporate Office Network
+
+The Corporate Office represents the primary enterprise environment.
+
+It has been designed using a hierarchical approach consisting of:
+
+- Access Layer
+- Distribution Layer (implemented through Router-on-a-Stick)
+- Core Connectivity to the ISP
+
+The office network is logically divided into multiple VLANs to isolate departmental traffic while still allowing controlled communication through inter-VLAN routing.
+
+Both **wired and wireless connectivity** are provided within the Office environment. Wireless clients are assigned to their respective VLANs, allowing them to communicate with other devices within the same network while benefiting from the existing VLAN segmentation.
+
+Current VLAN implementation:
+
+| VLAN | Department | Network |
+|------|------------|----------------|
+| 10 | Admin        | 192.168.1.0/26 |
+| 20 | Finance      | 192.168.1.64/26 |
+| 30 | HR           | 192.168.1.128/26 |
+
+The Office router performs Router-on-a-Stick routing using IEEE 802.1Q encapsulation.
+
+
+
+# Home Network
+
+The Home Network represents a residential customer connected to the ISP.
+
+Unlike the Office environment, the Home network uses a single subnet and includes both wired and wireless devices.
+
+Current components include:
+
+- Home Router
+- Layer 2 Switch
+- Wireless Access Point
+- Desktop PC
+- Laptop
+- Smartphone
+
+DHCP is configured on the Home router to automatically assign IP addresses to client devices.
+
+The Home Network is intentionally isolated from the Office Network to simulate separate ISP customers.
+
+Current subnet:
+
+| Network | Gateway |
+|---------|----------|
+|192.168.2.0/24|192.168.2.1|
+
+
+
+# ISP Network
+
+The ISP Network acts as the service provider connecting independent customer networks.
+
+Current ISP components:
+
+- ISP Gateway Router
+- ISP Switch
+
+The ISP network currently provides basic Layer 3 connectivity and serves as the central connection point for the Office and Home networks.
+
+At this stage of the project, the ISP does not provide shared services such as DNS, Email, or Web hosting.
+
+These services will be introduced in later project versions.
+
+Current ISP subnet:
+
+| Network |
+|---------|
+|10.0.0.0/24|
+
+
+
+# Network Design Principles
+
+The following design principles were considered during implementation.
+
+### Modular Design
+
+Each network segment is built independently, allowing future expansion without redesigning the entire topology.
+
+### Scalability
+
+The architecture supports future implementation of:
+
+- Additional branch offices
+- Server farm
+- Enterprise services
+- Security devices
+
+### Segmentation
+
+Departmental devices inside the Office network are separated using VLANs to reduce broadcast domains and improve traffic organization.
+
+### Wireless Connectivity
+
+Both the Corporate Office and Home networks support wireless connectivity.
+
+The Office network uses multiple Access Points to provide Wi-Fi access across different VLANs, allowing laptops and smartphones to communicate within their assigned network segments.
+
+The Home network uses a dedicated Access Point to provide wireless connectivity for residential devices while the Home router manages IP address allocation through DHCP.
+
+### ISP Separation
+
+The Office and Home networks function as independent ISP customers.
+
+Neither network has direct access to the other, accurately representing a real-world ISP deployment.
+
+
+# Current Architecture Summary
+
+| Network | Purpose |
+|----------|---------|
+| Office | Enterprise LAN with VLAN segmentation |
+| Home | Residential LAN with wired and wireless connectivity |
+| ISP | External network providing customer connectivity |
+
+
+
+# Future Expansion
+
+The current architecture has been designed to support the addition of enterprise services without requiring major structural changes.
+
+Planned enhancements include:
+
+- NAT/PAT
+- DNS Server
+- FTP Server
+- Email Server
+- Web Server
+- ACLs
+- SSH
+- OSPF
+- Syslog
+- NTP
+- SNMP
+
+These features will be integrated into the existing architecture while maintaining the modular network design.

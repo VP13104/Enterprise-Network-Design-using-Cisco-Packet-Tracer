@@ -1,0 +1,151 @@
+# IP Addressing Scheme
+
+# Overview
+
+This document defines the IPv4 addressing scheme used throughout the Enterprise Network Design project.
+
+The addressing plan has been designed to provide logical separation between the Office, Home, and ISP networks while allowing future expansion without requiring significant redesign.
+
+Private IPv4 address space (RFC 1918) is used throughout the project.
+
+
+# Addressing Strategy
+
+The network is divided into three independent logical segments.
+
+| Network | Purpose | Address Space |
+|----------|---------|---------------|
+| Office Network | Enterprise LAN | 192.168.1.0/24 |
+| Home Network | Residential LAN | 192.168.2.0/24 |
+| ISP Network | External Connectivity | 10.0.0.0/24 |
+
+The Office network is further divided into multiple VLANs using subnetting, while the Home and ISP networks each use a single subnet.
+
+
+# Office Network
+
+The Corporate Office network is segmented into multiple VLANs to reduce broadcast domains and improve network organization.
+
+## VLAN Addressing
+
+| VLAN | Department | Network Address | Subnet Mask | Default Gateway |
+|------|------------|-----------------|-------------|-----------------|
+| 10 | Admin | 192.168.1.0/26 | 255.255.255.192 | 192.168.1.1 |
+| 20 | Finance | 192.168.1.64/26 | 255.255.255.192 | 192.168.1.65 |
+| 30 | HR | 192.168.1.128/26 | 255.255.255.192 | 192.168.1.129 |
+
+Each VLAN functions as an independent Layer 2 broadcast domain while inter-VLAN communication is provided by the Office router using Router-on-a-Stick.
+
+
+# Home Network
+
+The Home network is implemented using a single subnet.
+
+| Parameter | Value |
+|-----------|-------|
+| Network Address | 192.168.2.0/24 |
+| Subnet Mask | 255.255.255.0 |
+| Default Gateway | 192.168.2.1 |
+
+The Home router functions as both the default gateway and DHCP server for all home devices.
+
+
+
+# ISP Network
+
+The ISP network provides Layer 3 connectivity between customer networks.
+
+| Device | IP Address |
+|---------|------------|
+| ISP Gateway | 10.0.0.1 |
+| Office Router (WAN) | 10.0.0.2 |
+| Home Router (WAN) | 10.0.0.3 |
+
+The ISP network currently serves as the central connectivity segment for both customer environments.
+
+
+# Gateway Summary
+
+| Network | Default Gateway |
+|----------|-----------------|
+| VLAN 10 | 192.168.1.1 |
+| VLAN 20 | 192.168.1.65 |
+| VLAN 30 | 192.168.1.129 |
+| Home Network | 192.168.2.1 |
+| ISP Network | 10.0.0.1 |
+
+
+# DHCP Address Allocation
+
+## Office Network
+
+DHCP is configured to automatically allocate addresses within each VLAN.
+
+| VLAN | Address Allocation |
+|------|--------------------|
+| VLAN 10 | Dynamic |
+| VLAN 20 | Dynamic |
+| VLAN 30 | Dynamic |
+
+## Home Network
+
+The Home router provides DHCP services for all wired and wireless clients.
+
+| Network | DHCP |
+|----------|------|
+| Home Network | Enabled |
+
+
+
+# Reserved Addresses
+
+Certain IP addresses are reserved for infrastructure devices.
+
+## Office
+
+| Device | Address |
+|---------|----------|
+| Router VLAN 10 Gateway | 192.168.1.1 |
+| Router VLAN 20 Gateway | 192.168.1.65 |
+| Router VLAN 30 Gateway | 192.168.1.129 |
+
+## Home
+
+| Device | Address |
+|---------|----------|
+| Home Router | 192.168.2.1 |
+| Access Point | 192.168.2.2 |
+
+## ISP
+
+| Device | Address |
+|---------|----------|
+| ISP Gateway | 10.0.0.1 |
+
+
+# Addressing Design Considerations
+
+The addressing scheme has been designed with the following objectives:
+
+- Separate Office, Home, and ISP environments.
+- Provide dedicated address space for each Office VLAN.
+- Support automatic IP assignment through DHCP.
+- Reserve infrastructure addresses for routers and network devices.
+- Allow future expansion without major changes to the existing addressing plan.
+
+The modular addressing structure simplifies routing, troubleshooting, and future implementation of enterprise services such as NAT, DNS, ACLs, and dynamic routing protocols.
+
+
+# Summary
+
+The project currently uses five logical IP networks.
+
+| Network | Purpose |
+|----------|---------|
+| 192.168.1.0/26 | Office VLAN 10 |
+| 192.168.1.64/26 | Office VLAN 20 |
+| 192.168.1.128/26 | Office VLAN 30 |
+| 192.168.2.0/24 | Home Network |
+| 10.0.0.0/24 | ISP Network |
+
+This addressing plan provides a scalable foundation for future enhancements while maintaining logical separation between network segments.

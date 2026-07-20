@@ -1,0 +1,136 @@
+# VLAN Design
+
+# Overview
+
+The Corporate Office network is segmented using Virtual Local Area Networks (VLANs) to logically separate departments while sharing the same physical switching infrastructure.
+
+VLAN segmentation reduces broadcast traffic, improves network organization, enhances security, and simplifies network administration.
+
+Each department operates within its own Layer 2 broadcast domain while inter-VLAN communication is centrally managed by the Office router using Router-on-a-Stick.
+
+
+# VLAN Architecture
+
+The Office network currently consists of three VLANs.
+
+```mermaid
+graph TD
+    Office-RTR[Office Router] --> |802.1Q Trunk| CAS[Core Access Switch]
+    CAS        --> VL10[VLAN 10]
+    CAS        --> VL20[VLAN 20]
+    CAS        --> VL30[VLAN 30]
+```
+
+Each VLAN represents an independent Layer 2 network connected through managed switches.
+
+---
+
+# VLAN Assignment
+
+| VLAN ID | Department | Purpose |
+|----------|------------|---------|
+| 10 | Admin |  Management and administrative devices  |
+| 20 | Finance | Finance department devices |
+| 30 | HR | Human Resources devices |
+
+# VLAN Objectives
+
+The VLAN implementation was designed to achieve the following objectives:
+
+- Separate departmental traffic.
+- Reduce unnecessary broadcast traffic.
+- Improve network scalability.
+- Simplify network management.
+- Prepare the network for future access control policies using ACLs.
+
+# Access Ports
+
+End devices such as desktop computers, printers, and Access Points connect through access ports.
+
+Each access port is assigned to exactly one VLAN.
+
+Example:
+
+| Device        | Switch Port   | VLAN      |
+|---------------|---------------|-----------|
+| Admin PC      | Fa0/2         | VLAN 10   |
+| Finance PC    | Fa0/5         | VLAN 20   |
+| HR PC         | Fa0/9         | VLAN 30   |
+
+# Trunk Links
+
+Communication between the Office switch and the Office router is provided through an IEEE 802.1Q trunk.
+
+The trunk carries traffic from all configured VLANs over a single physical interface.
+
+```mermaid
+graph TD
+    Office-RTR[Office Router] --> | 802.1Q Trunk | Office-SW[Office Switch]
+```
+
+This allows the router to create separate logical subinterfaces for each VLAN while using only one physical Ethernet connection.
+
+
+# Wireless VLAN Integration
+
+The Office network supports both wired and wireless connectivity.
+
+Wireless Access Points are connected to the switching infrastructure and provide Wi-Fi access for laptops and smartphones.
+
+Wireless devices are assigned to the appropriate VLAN according to the network design, allowing them to communicate with other devices within the same department while maintaining VLAN segmentation.
+
+
+# Inter-VLAN Communication
+
+Since each VLAN is an independent Layer 2 network, communication between VLANs is not possible through switching alone.
+
+Inter-VLAN routing is performed by the Office router using Router-on-a-Stick.
+
+Traffic flow between VLANs follows the path below.
+
+```mermaid
+graph TD
+client[Client]
+
+client --> Office-SW[Office Switch] --> |802.1Q Trunk| Office-RTR[Office Router]
+
+Office-RTR --> Office-SW1[Back to Office Switch]
+
+Office-SW1 --> vlan[Destination VLAN]
+```
+
+This allows devices in different VLANs to communicate while maintaining logical separation.
+
+
+# VLAN Design Considerations
+
+The VLAN implementation follows several enterprise networking best practices:
+
+- One VLAN per department.
+- Logical separation of users.
+- Centralized routing.
+- Simplified network administration.
+- Support for future ACL implementation.
+- Support for future expansion without redesigning the network.
+
+
+# Current Limitations
+
+The current VLAN implementation provides unrestricted inter-VLAN communication through the Office router.
+
+Traffic filtering between VLANs has not yet been implemented.
+
+Future versions of the project will introduce Access Control Lists (ACLs) to enforce communication policies between departments.
+
+
+# Summary
+
+The VLAN implementation provides logical segmentation of the Corporate Office while maintaining efficient communication through Router-on-a-Stick.
+
+Current implementation includes:
+
+- Three departmental VLANs
+- IEEE 802.1Q trunking
+- Router-on-a-Stick
+- Wired and wireless connectivity
+- Enterprise-ready modular design

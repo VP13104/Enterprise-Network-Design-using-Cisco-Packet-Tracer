@@ -1,0 +1,98 @@
+# Project Overview
+
+# Introduction
+
+This project demonstrates the design and implementation of a small-scale enterprise network using Cisco Packet Tracer.
+
+The primary objective is to simulate a realistic business environment by integrating an Office network, a Home network, and an Internet Service
+Provider (ISP) into a modular network architecture.
+
+The project follows industry networking concepts including network segmentation, inter-VLAN routing, DHCP, wireless connectivity, and structured network documentation.
+
+Rather than focusing solely on device configuration, the project emphasizes network design principles, scalability, and maintainability.
+
+# Project Scope
+
+The current implementation includes:
+
+- Corporate Office Network
+- Home Network
+- ISP Network
+- VLAN Segmentation
+- Router-on-a-Stick
+- DHCP
+- Wired Connectivity
+- Wireless Connectivity
+- Structured Documentation
+- Configuration Archive
+
+# Project Goals
+
+The primary goals of this project are:
+
+- Design a modular enterprise network.
+- Implement logical network segmentation using VLANs.
+- Enable communication between VLANs using Router-on-a-Stick.
+- Provide automatic IP address allocation using DHCP.
+- Integrate wired and wireless devices.
+- Simulate ISP connectivity.
+- Produce professional documentation for the complete implementation.
+
+# Technologies Used
+
+The project utilizes the following technologies and devices.
+
+| Technology | Purpose |
+|------------|---------|
+| Cisco Packet Tracer | Network Simulation |
+| Cisco 2911 Router | Routing |
+| Cisco 2960 Switch | Layer 2 Switching |
+| VLAN | Network Segmentation |
+| IEEE 802.1Q | VLAN Trunking |
+| Router-on-a-Stick | Inter-VLAN Routing |
+| DHCP | Automatic Address Assignment |
+| Wireless Access Point | Wireless Connectivity |
+
+# Project Components
+
+The network consists of three logical environments.
+
+## Corporate Office
+
+Provides an enterprise LAN consisting of multiple VLANs, wired and wireless connectivity, and centralized routing.
+
+## Home Network
+
+Represents a residential customer network with wired and wireless devices connected through a dedicated home router.
+
+## ISP Network
+
+Represents the external service provider responsible for connecting independent customer networks.
+
+# Repository Structure
+
+```
+Enterprise-Network-Design
+│
+├── PacketTracer/
+├── Documentation/
+├── Configurations/
+├── Images/
+└── README.md
+```
+
+# Intended Audience
+
+This project is intended for:
+
+- Students learning enterprise networking
+- Cisco Packet Tracer users
+- Networking enthusiasts
+- Recruiters reviewing networking portfolios
+- Hiring managers evaluating practical networking skills
+
+# Conclusion
+
+This repository demonstrates the practical implementation of enterprise networking concepts within Cisco Packet Tracer.
+
+The project has been structured to reflect industry practices by combining network design, implementation, and documentation into a single portfolio project.

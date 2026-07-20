@@ -1,0 +1,150 @@
+# Router-on-a-Stick
+
+# Overview
+
+The Corporate Office network uses the Router-on-a-Stick (RoaS) architecture to provide inter-VLAN routing.
+
+Router-on-a-Stick is a method of routing traffic between multiple VLANs using a single physical router interface. 
+Instead of dedicating one physical interface per VLAN, multiple logical subinterfaces are created on a single interface. 
+Each subinterface acts as the default gateway for a specific VLAN.
+
+This approach reduces hardware requirements while providing efficient communication between isolated VLANs.
+
+# Why Router-on-a-Stick?
+
+The Office network contains multiple VLANs that represent different departments.
+
+Since VLANs are separate Layer 2 broadcast domains, devices in different VLANs cannot communicate through switching alone.
+
+Router-on-a-Stick enables communication between these VLANs while maintaining logical network segmentation.
+
+Benefits include:
+
+- Efficient use of router interfaces
+- Reduced hardware requirements
+- Centralized inter-VLAN routing
+- Easy scalability for additional VLANs
+- Enterprise-standard implementation for small to medium-sized networks
+
+
+# Network Topology
+
+```mermaid
+flowchart TD
+    A[Office Router \n GigabitEthernet0/0] --> | IEEE 802.1Q Trunk | B[Office Core Switch]
+    
+    B --> c[VLAN 10]
+    B --> d[VLAN 20]
+    B --> e[VLAN 30]
+```
+
+The connection between the Office Router and the Office Switch operates as an IEEE 802.1Q trunk, allowing multiple VLANs to share a single physical Ethernet link.
+
+# Router Interface Design
+
+The Office router uses one physical interface connected to the switch.
+
+| Interface | Purpose |
+|-----------|---------|
+| GigabitEthernet0/0 | 802.1Q trunk to Office Switch |
+
+This physical interface does **not** have an IP address assigned.
+
+Instead, IP addresses are configured on logical subinterfaces.
+
+# Router Subinterfaces
+
+Each VLAN is assigned a dedicated router subinterface.
+
+| Subinterface | VLAN | Purpose |
+|--------------|------|---------|
+| GigabitEthernet0/0.10 | VLAN 10 | Default Gateway |
+| GigabitEthernet0/0.20 | VLAN 20 | Default Gateway |
+| GigabitEthernet0/0.30 | VLAN 30 | Default Gateway |
+
+Each subinterface performs Layer 3 routing for its associated VLAN.
+
+# IEEE 802.1Q Encapsulation
+
+Router-on-a-Stick relies on IEEE 802.1Q VLAN tagging.
+
+When traffic leaves the switch over the trunk link, a VLAN tag is added to each Ethernet frame.
+
+The router examines this VLAN tag and forwards the traffic to the corresponding subinterface.
+
+This allows a single physical interface to process traffic for multiple VLANs simultaneously.
+
+# Packet Flow
+
+Example:
+
+A workstation in VLAN 10 communicates with a workstation in VLAN 20.
+
+```mermaid
+flowchart TD
+    A[PC VLAN 10] 
+
+    A --> B[Office Switch] --> |802.1Q Trunk| C[Office Router] 
+    C --> | Routes Packet | D[Office Switch]
+
+    D --> E[PC VLAN 20]
+```
+
+Traffic is forwarded to the router, routed between VLANs, and returned to the switch for delivery to the destination VLAN.
+
+# Default Gateways
+
+Each VLAN uses the router subinterface as its default gateway.
+
+| VLAN | Default Gateway |
+|------|-----------------|
+| VLAN 10 | 192.168.1.1 |
+| VLAN 20 | 192.168.1.65 |
+| VLAN 30 | 192.168.1.129 |
+
+All devices within a VLAN forward traffic destined for another network to their respective default gateway.
+
+# Advantages
+
+The current implementation provides several advantages:
+
+- Efficient utilization of router interfaces
+- Centralized Layer 3 routing
+- Logical network segmentation
+- Reduced hardware cost
+- Simplified administration
+- Support for future network expansion
+
+# Current Implementation
+
+The Office network currently implements:
+
+- One Cisco 2911 Router
+- One IEEE 802.1Q trunk
+- Three router subinterfaces
+- Three VLANs
+- Inter-VLAN communication
+- DHCP support for each VLAN
+
+The implementation successfully allows communication between different VLANs while maintaining logical separation at Layer 2.
+
+# Current Limitations
+
+The current Router-on-a-Stick implementation allows unrestricted communication between VLANs.
+
+Although this is suitable for demonstrating inter-VLAN routing, production enterprise networks typically enforce security policies between departments.
+
+Future versions of this project will implement:
+
+- Extended Access Control Lists (ACLs)
+- Network Address Translation (NAT/PAT)
+- Dynamic routing (OSPF)
+- Firewall integration
+
+These enhancements will improve security while maintaining the existing routing architecture.
+
+# Summary
+
+Router-on-a-Stick provides the Layer 3 functionality required for communication between multiple Office VLANs using a single physical router interface.
+
+The design minimizes hardware requirements while maintaining scalability and serving as the foundation for future enterprise networking features such as ACLs, NAT, and dynamic routing.
